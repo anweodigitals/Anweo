@@ -66,15 +66,17 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
-export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
-    try {
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-    } catch (error) {
-      console.error(error);
-      return brandedErrorResponse();
-    }
-  },
-};
+async function handler(request: Request, env?: unknown, ctx?: unknown) {
+  try {
+    const entry = await getServerEntry();
+    const response = await entry.fetch(request, env, ctx);
+    return await normalizeCatastrophicSsrResponse(response);
+  } catch (error) {
+    console.error(error);
+    return brandedErrorResponse();
+  }
+}
+
+handler.fetch = handler;
+
+export default handler;
