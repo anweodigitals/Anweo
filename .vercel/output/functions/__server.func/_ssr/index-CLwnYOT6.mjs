@@ -360,7 +360,7 @@ function Cursor() {
 const Marquee = reactExports.lazy(() => import("./Marquee-CmSdtnNk.mjs").then((m) => ({
   default: m.Marquee
 })));
-const Services = reactExports.lazy(() => import("./Services-PBTRlAV1.mjs").then((m) => ({
+const Services = reactExports.lazy(() => import("./Services-VjmNFY68.mjs").then((m) => ({
   default: m.Services
 })));
 const Process = reactExports.lazy(() => import("./Process-DpYAN8UD.mjs").then((m) => ({
@@ -369,7 +369,7 @@ const Process = reactExports.lazy(() => import("./Process-DpYAN8UD.mjs").then((m
 const Studio = reactExports.lazy(() => import("./Studio-C9Cc2_hD.mjs").then((m) => ({
   default: m.Studio
 })));
-const Footer = reactExports.lazy(() => import("./Footer-CO6K2kNp.mjs").then((m) => ({
+const Footer = reactExports.lazy(() => import("./Footer-Dwvx9QW4.mjs").then((m) => ({
   default: m.Footer
 })));
 function Index() {

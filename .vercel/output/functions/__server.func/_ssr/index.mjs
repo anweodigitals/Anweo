@@ -53,7 +53,7 @@ function renderErrorPage() {
 let serverEntryPromise;
 async function getServerEntry() {
   if (!serverEntryPromise) {
-    serverEntryPromise = import("./server-w-cFYc5H.mjs").then(
+    serverEntryPromise = import("./server-CiydFp4g.mjs").then(
       (m) => m.default ?? m
     );
   }
@@ -93,19 +93,18 @@ async function normalizeCatastrophicSsrResponse(response) {
   console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
   return brandedErrorResponse();
 }
-const server = {
-  async fetch(request, env, ctx) {
-    try {
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-    } catch (error) {
-      console.error(error);
-      return brandedErrorResponse();
-    }
+async function handler(request, env, ctx) {
+  try {
+    const entry = await getServerEntry();
+    const response = await entry.fetch(request, env, ctx);
+    return await normalizeCatastrophicSsrResponse(response);
+  } catch (error) {
+    console.error(error);
+    return brandedErrorResponse();
   }
-};
+}
+handler.fetch = handler;
 export {
-  server as default,
+  handler as default,
   renderErrorPage as r
 };

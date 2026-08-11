@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { M as Magnetic, L as LiveClock } from "./index-BGxyXelK.mjs";
+import { M as Magnetic, L as LiveClock } from "./index-CLwnYOT6.mjs";
 import { R as Reveal } from "./Reveal-10eBSdHQ.mjs";
 import { u as useScroll, c as useTransform, m as motion } from "../_libs/framer-motion.mjs";
 import "../_libs/lenis.mjs";

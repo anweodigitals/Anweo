@@ -11,7 +11,7 @@ import "node:stream/web";
 import "node:stream";
 import "../_libs/react-dom.mjs";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-Dlr7HnYG.css";
+const appCss = "/assets/styles-sF-v6t0L.css";
 function NotFoundComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-md text-center", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-7xl font-bold text-foreground", children: "404" }),
@@ -96,7 +96,7 @@ function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
 const cafe = "/assets/case-cafe-DK9YPiDS.jpg";
-const $$splitComponentImporter = () => import("./index-BGxyXelK.mjs").then((n) => n.i);
+const $$splitComponentImporter = () => import("./index-CLwnYOT6.mjs").then((n) => n.i);
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component"),
   head: () => ({
