@@ -66,14 +66,74 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
-async function handler(request: Request, env?: unknown, ctx?: unknown) {
+function toWebRequest(req: any): Request {
+  if (req instanceof Request || (req && typeof req.headers?.get === "function" && typeof req.url === "string")) {
+    return req as Request;
+  }
+
+  const headers = new Headers();
+  if (req && req.headers) {
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (value !== undefined) {
+        if (Array.isArray(value)) {
+          value.forEach((v) => headers.append(key, String(v)));
+        } else {
+          headers.set(key, String(value));
+        }
+      }
+    }
+  }
+
+  const proto = headers.get("x-forwarded-proto") || "https";
+  const host = headers.get("x-forwarded-host") || headers.get("host") || "localhost";
+  const rawUrl = req?.url || "/";
+  const fullUrl = rawUrl.startsWith("http") ? rawUrl : `${proto}://${host}${rawUrl}`;
+
+  const method = req?.method || "GET";
+  const hasBody = method !== "GET" && method !== "HEAD";
+
+  return new Request(fullUrl, {
+    method,
+    headers,
+    body: hasBody ? req : undefined,
+  });
+}
+
+async function handler(rawReq: any, rawResOrEnv?: any, ctx?: unknown) {
+  const isNodeHandler = rawResOrEnv && typeof rawResOrEnv.writeHead === "function" && typeof rawResOrEnv.end === "function";
+
   try {
+    const request = toWebRequest(rawReq);
+    const env = isNodeHandler ? undefined : rawResOrEnv;
     const entry = await getServerEntry();
     const response = await entry.fetch(request, env, ctx);
-    return await normalizeCatastrophicSsrResponse(response);
+    const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
+
+    if (isNodeHandler) {
+      const res = rawResOrEnv;
+      res.statusCode = normalizedResponse.status;
+      normalizedResponse.headers.forEach((val, key) => {
+        res.setHeader(key, val);
+      });
+      const bodyBuffer = await normalizedResponse.arrayBuffer();
+      res.end(Buffer.from(bodyBuffer));
+      return;
+    }
+
+    return normalizedResponse;
   } catch (error) {
-    console.error(error);
-    return brandedErrorResponse();
+    console.error("SSR Handler Error:", error);
+    const errResp = brandedErrorResponse();
+
+    if (isNodeHandler) {
+      const res = rawResOrEnv;
+      res.statusCode = 500;
+      res.setHeader("content-type", "text/html; charset=utf-8");
+      res.end(await errResp.text());
+      return;
+    }
+
+    return errResp;
   }
 }
 
